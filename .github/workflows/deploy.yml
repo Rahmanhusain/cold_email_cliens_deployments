@@ -1,4 +1,4 @@
-name: Deploy F4 and Wellness (Prebuilt)
+name: Deploy both F4 and Wellness sites
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
       - main
 
 permissions:
-  contents: write
+  contents: write  # required to push to gh-pages
 
 jobs:
   deploy:
@@ -18,22 +18,16 @@ jobs:
         with:
           fetch-depth: 0
 
-      # Deploy F4 site
-      - name: Deploy F4
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: F4/dist
-          destination_dir: F4
-          keep_files: true
-          force_orphan: true
+      - name: Prepare deployment folder
+        run: |
+          mkdir deploy
+          # copy built sites into a single folder
+          cp -r F4/dist deploy/F4
+          cp -r wellness/dist deploy/wellness
 
-      # Deploy Wellness site
-      - name: Deploy Wellness
+      - name: Deploy both sites to gh-pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: wellness/dist
-          destination_dir: wellness
-          keep_files: true
+          publish_dir: ./deploy
           force_orphan: true
