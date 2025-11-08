@@ -1,41 +1,33 @@
-name: Deploy F4 and Wellness
+name: Deploy Prebuilt F4 and Wellness Sites
 
 on:
   push:
     branches:
-      - main  # or your default branch name
+      - main  # or your default branch (like master)
 
 jobs:
-  build-and-deploy:
+  deploy:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-
-      - name: Install dependencies (if needed)
-        run: npm ci || npm install
-
       # ---------------------
-      # Deploy F4 project
+      # Deploy F4 (prebuilt)
       # ---------------------
-      - name: Deploy F4 dist to GitHub Pages
+      - name: Deploy F4/dist to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./F4/dist
           destination_dir: F4
-          keep_files: true  # so both sites remain in gh-pages branch
+          keep_files: true  # Keeps both sites in the same gh-pages branch
 
       # ---------------------
-      # Deploy Wellness project
+      # Deploy Wellness (prebuilt)
       # ---------------------
-      - name: Deploy Wellness dist to GitHub Pages
+      - name: Deploy wellness/dist to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
